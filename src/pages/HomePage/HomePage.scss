@@ -1,0 +1,17 @@
+.home {
+    display: flex;
+    flex-direction: column;
+    gap: 71px;
+}
+
+.title {
+    font: normal 54px 'Nekst-Black';
+    max-width: 753px;
+    height: 98px;
+    line-height: 90%;
+}
+
+.calculator {
+    display: flex;
+    gap: 32px;
+}

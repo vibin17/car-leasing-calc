@@ -1,14 +1,17 @@
+@import url('../src/fonts/nekst/stylesheet.css');
+@import url('../src/fonts/gilroy/stylesheet.css');
+
 .App {
   display: flex;
   justify-content: center;
-  align-items: center;
-  background: #E5E5E5;
+  /* align-items: center; */
+  background: #FFFFFF;
   min-height: 100vh;
 }
 
 .container {
   width: 1440px;
-  padding: 170px 48px;
+  padding: 174px 47px;
 }
 
 @media (max-width: 1439px) {
