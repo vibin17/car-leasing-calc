@@ -1,68 +1,90 @@
+$title-font-size: 16px;
+$border-size: 2px;
+$border-radius: 16px;
+$field-total-padding: 24px - $border-size;
+$field-height: 68px;
+
+
 .range {
     display: flex;
     flex-direction: column;
     gap: 24px;
     width: 427px;
-
     &__title {
-        font: normal 16px 'Gilroy';
+        font: normal $title-font-size 'Gilroy';
         line-height: 20px;
     }
 
     &__input-section {
-        display: flex;
-        flex-direction: column;
+        height: $field-height;
+        border: solid $border-size #F3F3F4;
         background: #F3F3F4;
-        border-radius: 16px;
+        border-radius: $border-radius;
+        position: relative;
+        &--active {
+            background: #FFFFFF;
+        }
     }
 
     &-field {
+        height: 100%;
         display: flex;
         justify-content: space-between;
-        gap: 20px;
-        border-radius: inherit;
-        padding: 7px;
+        align-items: center;
+        padding: 6px;
         &__wrapper {
-            max-width: 100%;
+            min-width: 0;
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start;
             align-items: center;
-            padding: 11px 17px 0 17px;
+            padding: 10px 16px;
+            padding-top: 12px;
             color: #575757;
-            font: normal 30px 'Nekst-Black';
-            line-height: 36px;
+            font: normal 30px 'Nekst';
         }
         &__input {
+            min-width: 0;
+            display: block;
             border: 0;
             outline: 0;
             color: inherit;
             font: inherit;
-            line-height: inherit;
             background: transparent;
-            max-width: 70%;
         }
         &__postfix {
-            vertical-align: middle;
+            min-width: 0;
+            font: bold 30px 'Gilroy';
+            line-height: 36px;
         }
         &__extra {
+            flex: 0 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            white-space: nowrap;
             background: #EBEBEC;
-            border-radius: inherit;
-            padding: 15px 17px;
-            font: normal 20px 'Nekst-Black';
+            border-radius: $border-radius;
+            padding: 15px;
+            font: normal 20px 'Nekst';
             line-height: 24px;
         }
     }
 
     &-slider {
         width: 100%;
-        position: relative;
-
+        padding: 0 $field-total-padding; // minus border width
+        position: absolute;
+        left: 0;
+        bottom: -$border-size;
         &__input {
-            position: absolute;
-            bottom: 0;
-            background: transparent;
-            height: 2px;
+            display: block;
             width: 100%;
+            border: 0;
+            outline: 0;
+            appearance: none;
+            background: #FF9514;
+            height: 2px;
+            max-width: 100%;
         }
     }
 }

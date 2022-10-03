@@ -4,6 +4,7 @@ import './HomePage.scss'
 
 const HomePage = () => {
     let [carPrice, setCarPrice] = useState(0)
+    let [initPay, setInitPay] = useState(0)
     return (
         <div className='home'>
             <p className='title'>
@@ -15,24 +16,24 @@ const HomePage = () => {
                     value={carPrice}
                     setValue={setCarPrice}
                     min={0}
-                    max={0}
+                    max={4000000}
                     postfix={'₽'}
                 />
-
                 <Range 
-                    name='Стоимость автомобиля'
-                    value={carPrice}
-                    setValue={setCarPrice}
+                    name='Первоначальный взнос'
+                    value={initPay}
+                    setValue={setInitPay}
                     min={0}
-                    max={0}
+                    max={4000000}
                     postfix={'₽'}
                     extra={{
+                        unit: '%',
                         formula: (val: number) => {
-                            return val
-                        },
-                        unit: '%'
+                            return val.toString()
+                        }
                     }}
                 />
+
             </div>
         </div>
     )
