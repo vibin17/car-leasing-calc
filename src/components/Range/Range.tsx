@@ -117,9 +117,13 @@ const Range = ({ value, setValue, limits, postfix, disabled, step = 1000, getExt
                     max={upperLimit}
                     onChange={sliderOnChange}
                     style={{
-                        backgroundSize: `30%`
+                        backgroundSize: 
+                            (sliderValue - lowerLimit) * 100
+                                /
+                            (upperLimit - lowerLimit) + '% 100%'
                     }}
                 />
+                <div className='range-slider__progress'/>
             </div>
         </div>
     )
