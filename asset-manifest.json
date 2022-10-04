@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/car-leasing-calc/static/css/main.435dae42.css",
-    "main.js": "/car-leasing-calc/static/js/main.85c99a72.js",
+    "main.js": "/car-leasing-calc/static/js/main.ac7cb0c7.js",
     "static/media/Nekst-Black.ttf": "/car-leasing-calc/static/media/Nekst-Black.dffaebf93d38d4c41536.ttf",
     "static/media/Gilroy-UltraLightItalic.eot": "/car-leasing-calc/static/media/Gilroy-UltraLightItalic.a6fc8679f9d9bbc3e3a7.eot",
     "static/media/Gilroy-UltraLightItalic.ttf": "/car-leasing-calc/static/media/Gilroy-UltraLightItalic.68a9a27f1aa1261013f3.ttf",
@@ -87,10 +87,10 @@
     "static/media/Gilroy-Extrabold.woff2": "/car-leasing-calc/static/media/Gilroy-Extrabold.5c5942d3e4d9a9645df4.woff2",
     "index.html": "/car-leasing-calc/index.html",
     "main.435dae42.css.map": "/car-leasing-calc/static/css/main.435dae42.css.map",
-    "main.85c99a72.js.map": "/car-leasing-calc/static/js/main.85c99a72.js.map"
+    "main.ac7cb0c7.js.map": "/car-leasing-calc/static/js/main.ac7cb0c7.js.map"
   },
   "entrypoints": [
     "static/css/main.435dae42.css",
-    "static/js/main.85c99a72.js"
+    "static/js/main.ac7cb0c7.js"
   ]
 }
