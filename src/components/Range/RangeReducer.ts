@@ -1,4 +1,4 @@
-import { FieldLimits, filterNumeric, formatNumericString, getValidValue } from "../../data/data"
+import { FieldLimits, getNumberFromNumStr as getNumbFromNumStr, formatNumericStr as formatNumStr, getValidValue, clearNumericStr } from "../../data/data"
 
 export type RangeState = {
     sliderValue: number
@@ -34,23 +34,23 @@ export const RangeReducer = (state: RangeState, { type, value = '', limits = emp
         case RangeActionTypes.SLIDER_CHANGE:
             return {
                 ...state,
-                sliderValue: filterNumeric(value),
-                fieldValue: formatNumericString(value) + ' ' + state.postfix
+                sliderValue: getNumbFromNumStr(value),
+                fieldValue: formatNumStr(value) + ' ' + state.postfix
             }
         case RangeActionTypes.FIELD_CHANGE:
             return {
                 ...state,
-                fieldValue: filterNumeric(formatNumericString(value)).toString()
+                fieldValue: clearNumericStr(value)
             }
         case RangeActionTypes.FIELD_FOCUS:
             return {
                 ...state,
-                fieldValue: filterNumeric(state.fieldValue).toString(),
+                fieldValue: clearNumericStr(state.fieldValue),
                 isFieldActive: true
             }
         case RangeActionTypes.FIELD_BLUR: {
             let validValue = getValidValue(
-                filterNumeric(state.fieldValue), 
+                getNumbFromNumStr(state.fieldValue), 
                 state.lowerLimit, 
                 state.upperLimit, 
                 state.step
@@ -59,7 +59,7 @@ export const RangeReducer = (state: RangeState, { type, value = '', limits = emp
                 ...state,
                 sliderValue: validValue,
                 fieldValue: 
-                    formatNumericString(validValue) +
+                    formatNumStr(validValue) +
                         ' ' + state.postfix,
                 isFieldActive: false
             }
@@ -77,7 +77,7 @@ export const RangeReducer = (state: RangeState, { type, value = '', limits = emp
                 fieldValue: state.isFieldActive? 
                     validValue.toString()
                         :
-                    formatNumericString(validValue) +
+                    formatNumStr(validValue) +
                         ' ' + state.postfix,
                 upperLimit: limits.upper,
                 lowerLimit: limits.lower

@@ -1,5 +1,5 @@
 import { useEffect, useReducer } from 'react'
-import { FieldLimits, formatNumericString } from '../../data/data'
+import { FieldLimits, formatNumericStr } from '../../data/data'
 import './Range.scss'
 import { RangeActionTypes, RangeReducer } from './RangeReducer'
 
@@ -16,7 +16,7 @@ type props = {
 const Range = ({ value, setValue, limits, postfix, disabled, step = 1000, getExtraInfo = undefined }: props) => {
     let [{ sliderValue, fieldValue, isFieldActive, lowerLimit, upperLimit }, rangeDispatch] = useReducer(RangeReducer, {
         sliderValue: value,
-        fieldValue: formatNumericString(value),
+        fieldValue: formatNumericStr(value),
         isFieldActive: false,
         lowerLimit: limits.lower,
         upperLimit: limits.upper,

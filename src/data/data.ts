@@ -18,8 +18,8 @@ export const getData = () => ({
     }
 })
 
-export const formatNumericString = (numb: string | number) => {
-    let str = numb.toString()
+export const formatNumericStr = (numb: string | number) => {
+    let str = clearNumericStr(numb.toString())
     let matchResults = str.split('').reverse().join('').match(/\d{3}/g)?? []
     if (matchResults.length === 0) {
         return str
@@ -35,9 +35,13 @@ export const formatNumericString = (numb: string | number) => {
     return `${base}${space}${sepThousands}`
 }
 
-export const filterNumeric = (str: string) => {
-    return parseInt(str.replaceAll(/\D/g, '') || '0')
+export const getNumberFromNumStr = (str: string) => {
+    return parseInt(clearNumericStr(str))
 }
+
+export const clearNumericStr = ((str: string) => {
+    return str.replaceAll(/\D/g, '') || '0'
+})
 
 export const getValidValue = (value: number, lower: number, upper: number, step: number) => {
     if (value < lower) {

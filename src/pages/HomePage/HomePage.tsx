@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import Range from '../../components/Range/Range'
-import { formatNumericString, getData } from '../../data/data'
+import { formatNumericStr, getData } from '../../data/data'
 import './HomePage.scss'
 
 const HomePage = () => {
@@ -88,7 +88,7 @@ const HomePage = () => {
                             Сумма договора лизинга
                         </div>
                         <div className='calculator-block__value'>
-                            {`${formatNumericString(initial + months + monthPay)} ₽`}
+                            {`${formatNumericStr(initial + months + monthPay)} ₽`}
                         </div>
                     </div>
                     <div className='calculator-block'>
@@ -96,7 +96,7 @@ const HomePage = () => {
                             Ежемесячный платеж от
                         </div>
                         <div className='calculator-block__value'>
-                            {`${formatNumericString(monthPay)} ₽`}
+                            {`${formatNumericStr(monthPay)} ₽`}
                         </div>
                     </div>
                     <div className='calculator-block'>
