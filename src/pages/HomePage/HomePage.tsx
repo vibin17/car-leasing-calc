@@ -1,70 +1,136 @@
-import { useState } from 'react'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
 import Range from '../../components/Range/Range'
-import { getData } from '../../data/data'
+import { formatNumericString, getData } from '../../data/data'
 import './HomePage.scss'
 
 const HomePage = () => {
-    const limits = getData()
-    let [price, setPrice] = useState(limits.price.lower)
-    let [initial, setInitial] = useState(limits.initial.lower * 100)
-    let [months, setMonths] = useState(limits.months.lower)
+    const inputData = getData()
+    let [price, setPrice] = useState(inputData.price.lower)
+    let [initial, setInitial] = useState(price * inputData.initial.lower)
+    let [months, setMonths] = useState(inputData.months.lower)
+    let [isLoading, setIsLoading] = useState(false)
+    const monthPay = Math.ceil(
+        (price - initial) 
+            * 
+        (
+            (0.035 * Math.pow((1 + 0.035), months)) 
+                / 
+            (Math.pow((1 + 0.035), months) - 1)
+        )
+    )
+
     return (
         <div className='home'>
             <p className='title'>
                 Рассчитайте стоимость автомобиля в лизинг
             </p>
             <div className='calculator'>
-                <Range 
-                    name='Стоимость автомобиля'
-                    value={price}
-                    setValue={setPrice}
-                    limits={limits.price}
-                    postfix={'₽'}
-                />
-                <Range 
-                    name='Первоначальный взнос'
-                    value={initial}
-                    setValue={setInitial}
-                    limits={{
-                        lower: limits.initial.lower * 100,
-                        upper: limits.initial.upper * 100,
-                    }}
-                    postfix={'₽'}
-                    extra={{
-                        formula: (rate: number) => {
-                            return price * rate / 100
-                        },
-                        dep: price,
-                        unit: '%'
-                    }}
-                />
-                <Range 
-                    name='Срок лизинга'
-                    value={months}
-                    setValue={setMonths}
-                    limits={{
-                        lower: limits.months.lower,
-                        upper: limits.months.upper,
-                    }}
-                    postfix={'мес.'}
-                />
-                <div className='calculator-block'>
-                    <div className='calculator-block__title'>
-                        Сумма договора лизинга
+                <div className='calculator__fields'>
+                    <div className='calculator-block'>
+                        <div className='calculator-block__title'>
+                            Стоимость автомобиля
+                        </div>
+                        <div className='calculator-block__range'>
+                            <Range
+                                value={price}
+                                setValue={setPrice}
+                                limits={inputData.price}
+                                postfix={'₽'}
+                                disabled={isLoading}
+                                step={1000}
+                            />
+                        </div>
                     </div>
-                    <div className='calculator-block__results'>
-                        4 467 313 ₽
+                    <div className='calculator-block'>
+                        <div className='calculator-block__title'>
+                            Первоначальный взнос
+                        </div>
+                        <div className='calculator-block__range'>
+                            <Range
+                                value={initial}
+                                setValue={setInitial}
+                                limits={{
+                                    lower: price * inputData.initial.lower,
+                                    upper: price * inputData.initial.upper,
+                                }}
+                                postfix={'₽'}
+                                disabled={isLoading}
+                                step={100}
+                                getExtraInfo={() => 
+                                    `${Math.ceil(initial / price * 100)}%`
+                                }
+                            />
+                        </div> 
+                    </div>
+                    <div className='calculator-block'>
+                        <div className='calculator-block__title'>
+                            Срок лизинга
+                        </div>
+                        <div className='calculator-block__range'>
+                            <Range
+                                value={months}
+                                setValue={setMonths}
+                                limits={{
+                                    lower: inputData.months.lower,
+                                    upper: inputData.months.upper,
+                                }}
+                                postfix={'мес.'}
+                                disabled={isLoading}
+                                step={1}
+                            />
+                        </div>
                     </div>
                 </div>
-                <div className='calculator-block'>
-                    <div className='calculator-block__title'>
-                        Ежемесячный платеж
+                <div className='calculator__results'>
+                    <div className='calculator-block'>
+                        <div className='calculator-block__title'>
+                            Сумма договора лизинга
+                        </div>
+                        <div className='calculator-block__value'>
+                            {`${formatNumericString(initial + months + monthPay)} ₽`}
+                        </div>
                     </div>
-                    <div className='calculator-block__results'>
-                        114 455 ₽
+                    <div className='calculator-block'>
+                        <div className='calculator-block__title'>
+                            Ежемесячный платеж от
+                        </div>
+                        <div className='calculator-block__value'>
+                            {`${formatNumericString(monthPay)} ₽`}
+                        </div>
                     </div>
-                </div>
+                    <div className='calculator-block'>
+                        <button 
+                            className='calculator-btn' 
+                            onClick={() => {
+                                (async () => {
+                                    setIsLoading(true)
+                                    try {
+                                        const result = await axios.post('https://eoj3r7f3r4ef6v4.m.pipedream.net', 
+                                            {
+                                                price: price,
+                                                initial: initial,
+                                                months: months,
+                                                monthPay: monthPay
+                                            }
+                                        )
+                                        console.log(result)
+                                    } catch (error) {
+                                        console.log(error)
+                                    } finally {
+                                        setIsLoading(false)
+                                    }
 
+                                })()
+                            }}
+                            disabled={isLoading}
+                        >
+                            {!isLoading && 'Оставить заявку' ||
+                                <div className='calculator-btn__loading'/>
+                            }
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     )

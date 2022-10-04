@@ -1,122 +1,126 @@
-import { useEffect, useState } from 'react'
-import { FieldLimits, numbToFormattedText } from '../../data/data'
+import { useEffect, useReducer } from 'react'
+import { FieldLimits, formatNumericString } from '../../data/data'
 import './Range.scss'
+import { RangeActionTypes, RangeReducer } from './RangeReducer'
 
 type props = {
-    readonly name: string
-    readonly value: number
-    readonly setValue: (value: number) => void
-    readonly limits: FieldLimits
-    readonly postfix: string
-    readonly extra?: {
-        formula: (val: number) => number
-        dep: number
-        unit: string
-    }
+    value: number
+    setValue: (value: number) => void
+    limits: FieldLimits
+    postfix: string
+    disabled: boolean
+    step?: number
+    getExtraInfo?: () => string
 }
 
-const Range = ({ name, value, setValue, limits, postfix, extra = undefined }: props) => {
-    let [textValue, setTextValue] = useState(() => {
-        if (extra) {
-            return numbToFormattedText(Math.ceil(extra.formula(value)))
-        }
-        return numbToFormattedText(value)
+const Range = ({ value, setValue, limits, postfix, disabled, step = 1000, getExtraInfo = undefined }: props) => {
+    let [{ sliderValue, fieldValue, isFieldActive, lowerLimit, upperLimit }, rangeDispatch] = useReducer(RangeReducer, {
+        sliderValue: value,
+        fieldValue: formatNumericString(value),
+        isFieldActive: false,
+        lowerLimit: limits.lower,
+        upperLimit: limits.upper,
+        postfix: (getExtraInfo && postfix) || '',
+        step: step
     })
-    let [isTextInputActive, setIsTextInputActive] = useState(false)
+
     let sliderOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        let val = parseInt(e.target.value)
-        setValue(val)
-        if (extra) {
-            setTextValue(numbToFormattedText(Math.ceil(extra.formula(val))))
+        let inputValue = e.target.value
+        rangeDispatch({
+            type: RangeActionTypes.SLIDER_CHANGE,
+            value: inputValue
+        })
+    }
+    const fieldOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        let inputValue = e.target.value
+        if (inputValue.length > limits.upper.toString().length) {
             return
         }
-        setTextValue(numbToFormattedText(val))
+        rangeDispatch({
+            type: RangeActionTypes.FIELD_CHANGE,
+            value: inputValue
+        })
     }
-    let textOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        let val = e.target.value.replaceAll(/\D/g, '')
-        if (val.length > 7) {
-            return
-        }
-        setTextValue(val)
+    const fieldOnFocus = (e: React.ChangeEvent<HTMLInputElement>) => {
+        rangeDispatch({
+            type: RangeActionTypes.FIELD_FOCUS
+        })
     }
-    let textOnFocus = (e: React.ChangeEvent<HTMLInputElement>) => {
-        let val = e.target.value
-        setIsTextInputActive(true)
-        setTextValue(val.replaceAll(/\s/g, '')) //deletes all whitespaces on focus
+    const fieldOnBlur = (e: React.ChangeEvent<HTMLInputElement>) => {
+        rangeDispatch({
+            type: RangeActionTypes.FIELD_BLUR
+        })
     }
-    let textOnBlur = (e: React.ChangeEvent<HTMLInputElement>) => {
-        let val = parseInt(e.target.value.replaceAll(/\D/g, '') || '0')
-        if (extra) {
-            if (val < Math.ceil(extra.formula(limits.lower))) {
-                val = Math.ceil(extra.formula(limits.lower))
-            }
-            if (val > Math.ceil(extra.formula(limits.upper))) {
-                val = Math.ceil(extra.formula(limits.upper))
-            }
-            setIsTextInputActive(false)
-            setValue(Math.ceil(val / extra.dep * 100))
-            setTextValue(numbToFormattedText(val))
-            return
-        }
-        if (val < limits.lower) {
-            val = limits.lower
-        }
-        if (val > limits.upper) {
-            val = limits.upper
-        }
-        setIsTextInputActive(false)
-        setValue(val)
-        setTextValue(numbToFormattedText(val)) //puts whitespaces after leaving the field
+    const blurOnEnterPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        const input = (e.target as HTMLInputElement)
+        if (e.key === 'Enter') {
+            input.blur()
+          }
     }
 
     useEffect(() => {
-        if (extra) {
-            setTextValue(numbToFormattedText(Math.ceil(extra.formula(value))))
+        setValue(sliderValue)
+    }, [sliderValue, setValue])
+
+    useEffect(() => {
+        rangeDispatch({
+            type: RangeActionTypes.LIMITS_CHANGED,
+            limits: {
+                lower: limits.lower,
+                upper: limits.upper
+            }
+        })
+    }, [limits])
+
+    useEffect(() => {
+        if (isFieldActive && disabled)
+        {
+            rangeDispatch({
+                type: RangeActionTypes.FIELD_BLUR 
+            })
         }
-    }, [extra, value])
+    }, [disabled])
+
     return (
-        <div className='range'>
-            <p className='range__title'>
-                {name}
-            </p>
-            <div className={`range__field ${isTextInputActive && `range__field--active`}`}>
-                <div className='range-text'>
-                    <div className='range-text__wrapper'>
-                        <input 
-                            className='range-text__input' 
-                            type='text' 
-                            onChange={textOnChange}
-                            onFocus={textOnFocus}
-                            onBlur={textOnBlur}
-                            size={0 || (extra && textValue.length)}
-                            placeholder={
-                                (extra && extra.formula(limits.lower).toString())
-                                || limits.lower.toString()
-                            }
-                            value={textValue}
-                        />
-                        <div className='range-text__postfix'>
-                            {postfix}
-                        </div> 
-                    </div>
-                    {extra &&
-                    <div className='range-text__extra'>
-                        {`${value}${extra.unit}`}
-                    </div>}
+        <div className={`range 
+            ${isFieldActive && `range--active`}
+            ${disabled && `range--disabled`}`}
+        >
+            <div className='range-field'>
+                <input
+                    className='range-field__input'
+                    type='text'
+                    onChange={fieldOnChange}
+                    onFocus={fieldOnFocus}
+                    onBlur={fieldOnBlur}
+                    onKeyDown={blurOnEnterPress}
+                    placeholder={lowerLimit.toString()}
+                    value={fieldValue}
+                />
+                {getExtraInfo &&
+                <div className='range-field__extra'>
+                    {getExtraInfo()}
+                </div> 
+                    ||
+                <div className='range-field__postfix'>
+                    {postfix}
                 </div>
-                <div className='range-slider'>
-                    <input 
-                        className='range-slider__input'
-                        type='range'
-                        value={value}
-                        min={limits.lower}
-                        max={limits.upper}
-                        onChange={sliderOnChange}
-
-                    />
-                </div>
+                    }
             </div>
-
+            <div className='range-slider'>
+                <input
+                    className='range-slider__input'
+                    type='range'
+                    value={sliderValue}
+                    step={step}
+                    min={lowerLimit}
+                    max={upperLimit}
+                    onChange={sliderOnChange}
+                    style={{
+                        backgroundSize: `30%`
+                    }}
+                />
+            </div>
         </div>
     )
 }

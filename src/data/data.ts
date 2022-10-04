@@ -5,8 +5,8 @@ export type FieldLimits = {
 
 export const getData = () => ({
     price: {
-        lower: formattedTextToNumb('1 000 000'),
-        upper: formattedTextToNumb('6 000 000')
+        lower: 1_000_000,
+        upper: 6_000_000
     },
     initial: {
         lower: 0.1,
@@ -15,12 +15,11 @@ export const getData = () => ({
     months: {
         lower: 1,
         upper: 60
-    },
-    interest: 0.035
+    }
 })
 
-export const numbToFormattedText = (number: string | number) => {
-    let str = number.toString()
+export const formatNumericString = (numb: string | number) => {
+    let str = numb.toString()
     let matchResults = str.split('').reverse().join('').match(/\d{3}/g)?? []
     if (matchResults.length === 0) {
         return str
@@ -36,6 +35,20 @@ export const numbToFormattedText = (number: string | number) => {
     return `${base}${space}${sepThousands}`
 }
 
-export const formattedTextToNumb = (str: string) => {
-    return parseInt(str.replaceAll(/\s/g, ''))
+export const filterNumeric = (str: string) => {
+    return parseInt(str.replaceAll(/\D/g, '') || '0')
+}
+
+export const getValidValue = (value: number, lower: number, upper: number, step: number) => {
+    if (value < lower) {
+        return lower
+    }
+    if (value > upper) {
+        return upper
+    }
+    return roundToNearest(value, step)
+}
+
+export const roundToNearest = (value: number, step: number) => {
+    return value - value % step
 }

@@ -1,90 +1,144 @@
-$title-font-size: 16px;
-$border-size: 2px;
-$border-radius: 16px;
-$field-total-padding: 24px - $border-size;
-$field-height: 68px;
-
+@import '../../mixin/media-mixin.scss';
 
 .range {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    width: 427px;
-    &__title {
-        font: normal $title-font-size 'Gilroy';
-        line-height: 20px;
+    height: 68px;
+    width: 100%;
+    border: solid 2px #F3F3F4;
+    background: #F3F3F4;
+    border-radius: 16px;
+    position: relative;
+    transition: all .2s;
+
+    &--active {
+        background: #FFFFFF;
     }
-    &__field {
-        height: $field-height;
-        border: solid $border-size #F3F3F4;
-        background: #F3F3F4;
-        border-radius: $border-radius;
-        position: relative;
-        &--active {
-            background: #FFFFFF;
-        }
+
+    &--disabled {
+        opacity: 40%;
+        pointer-events: none;
     }
-    &-text {
+
+    &-field {
         height: 100%;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 6px;
-        &__wrapper {
-            min-width: 0;
-            display: flex;
-            width: 100%;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 16px;
-            padding-top: 12px;
-            color: #575757;
-            font: normal 30px 'Nekst';
-        }
+        padding: 5px;
+        font: normal 30px 'Nekst';
+        color: #575757;
         &__input {
+            padding: 5px 17px;
+            padding-top: 8px;
             min-width: 0;
+            max-width: 320px;
             display: block;
             border: 0;
             outline: 0;
             color: inherit;
             font: inherit;
             background: transparent;
-            width: fit-content;
         }
-        &__postfix {
-   
-            min-width: 0;
-            font: bold 30px 'Gilroy';
-            line-height: 36px;
-        }
+
         &__extra {
+            min-width: 0;
             display: flex;
-            width: 70px;
+            width: 69px;
             justify-content: center;
             align-items: center;
             white-space: nowrap;
             background: #EBEBEC;
-            border-radius: $border-radius;
+            border-radius: 16px;
             padding: 15px 0;
             font: normal 20px 'Nekst';
             line-height: 24px;
         }
+
+        &__postfix {
+            min-width: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            line-height: 36px;
+            background: transparent;
+            color: #575757;
+            padding-right: 17px;
+            padding-top: 3px;
+        }
     }
+
     &-slider {
         width: 100%;
-        padding: 0 $field-total-padding; // minus border width
+        padding: 0 2px; // minus border width
         position: absolute;
         left: 0;
-        bottom: -$border-size;
+        bottom: -2px;
+
         &__input {
             display: block;
-            width: 100%;
             border: 0;
             outline: 0;
-            appearance: none;
-            background: #FF9514;
+            background: #E1E1E1;
             height: 2px;
-            max-width: 100%;
+            width: 100%;
+            -webkit-appearance: none;
+            display: flex;
+            align-items: center;
+
+            &:focus {
+                box-shadow: none;
+                outline: none;
+            }
+
+            &::-webkit-slider-runnable-track {
+                -webkit-appearance: none;
+                border: 0;
+                border-radius: 50% 50% 0 0;
+                background: transparent;
+            }
+
+            &::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                height: 16px;
+                width: 16px;
+                border: 0;
+                background: #FF9514;
+                border-radius: 50%;
+                transition: all .1s;
+                box-shadow: -40px -10px 0 0 10px red;
+
+                &:hover { 
+                    height: 20px;
+                    width: 20px;
+                    cursor: grab;
+                }
+
+                &:active {
+                    cursor: grabbing;
+                }
+            }
+
+        }
+    }
+}
+
+@include w320 {
+    .range {
+        height: 60px;
+        padding: 0;
+        &-field {
+            height: 100%;
+            font-size: 22px;
+            padding: 5px 11px;
+            &__input {
+                max-width: 200px;
+                padding: 3px 5px;
+            }
+            &__extra {
+                padding: 12px 0; 
+            }
+        }
+        &-slider {
+            padding: 0 17px;
         }
     }
 }
