@@ -31,3 +31,11 @@
     width: 320px;
   }
 }
+
+@media (max-width: 319px) {
+  .container {
+    padding: 47px 6.5%;
+    width: 100%;
+  }
+}
+

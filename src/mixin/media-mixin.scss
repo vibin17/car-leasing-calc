@@ -9,3 +9,7 @@
   @mixin w320 {
     @media (max-width: 767px) { @content; }
   }
+
+  @mixin less320 {
+    @media (max-width: 319px) { @content; }
+  }

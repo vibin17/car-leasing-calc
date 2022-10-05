@@ -32,6 +32,7 @@
     }
     &-block {
         width: 427px;
+
         &__title {
             font: normal 16px 'Gilroy';
             line-height: 20px;
@@ -123,8 +124,13 @@
             row-gap: 42px;
             justify-content: flex-start;
             align-items: flex-start;
+
             & .calculator-block {
                 width: 45%;
+
+                &:has(.calculator-btn) {
+                    width: 100%;
+                }
             }
 
         }
@@ -138,32 +144,11 @@
 }
 
 @include w768 {
-    .home {
-        gap: 41px;
-    }
     .calculator {
-        gap: 46px;
-        &__fields {
-            gap: 39px;
-            flex-wrap: wrap;
-        }
-
         &__results {
-            flex-wrap: wrap;
             column-gap: 61px;
             row-gap: 42px;
-            justify-content: flex-start;
-            align-items: flex-start;
-            & .calculator-block {
-                width: 45%;
-            }
 
-        }
-        &-block {
-            width: 100%;
-        }
-        &-btn {
-            width: 345px;
         }
     }
 }
@@ -175,23 +160,24 @@
     .title {
         font: normal 34px 'Nekst';
         max-width: 220px;
+        min-width: 0;
         height: 124px;
         line-height: 90%;
     }
     .calculator {
         gap: 24px;
+        
         &__fields {
             gap: 24px;
             flex-wrap: wrap;
         }
+        
         &__results {
-            flex-wrap: wrap;
             column-gap: 61px;
             row-gap: 27px;
-            justify-content: flex-start;
-            align-items: flex-start;
+
             & .calculator-block {
-                width: 70%;
+                width: 100%;
             }
 
         }
@@ -209,8 +195,9 @@
                 line-height: 20px;
             }
         }
+
         &-btn {
-            width: 280px;
+            width: 100%;
             height: 60px;
             $btn-h: 60px;
             margin-top: 4px;
