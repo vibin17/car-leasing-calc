@@ -1,4 +1,4 @@
-import { FieldLimits, getNumberFromNumStr as getNumbFromNumStr, formatNumericStr as formatNumStr, getValidValue, clearNumericStr } from "../../data/data"
+import { FieldLimits, getNumberFromNumStr, formatNumericStr, getValidValue, clearNumericStr } from "../../data/data"
 
 export type RangeState = {
     sliderValue: number
@@ -34,8 +34,8 @@ export const RangeReducer = (state: RangeState, { type, value = '', limits = emp
         case RangeActionTypes.SLIDER_CHANGE:
             return {
                 ...state,
-                sliderValue: getNumbFromNumStr(value),
-                fieldValue: formatNumStr(value) + ' ' + state.postfix
+                sliderValue: getNumberFromNumStr(value),
+                fieldValue: formatNumericStr(value) + ' ' + state.postfix
             }
         case RangeActionTypes.FIELD_CHANGE:
             return {
@@ -50,7 +50,7 @@ export const RangeReducer = (state: RangeState, { type, value = '', limits = emp
             }
         case RangeActionTypes.FIELD_BLUR: {
             let validValue = getValidValue(
-                getNumbFromNumStr(state.fieldValue), 
+                getNumberFromNumStr(state.fieldValue), 
                 state.lowerLimit, 
                 state.upperLimit, 
                 state.step
@@ -59,7 +59,7 @@ export const RangeReducer = (state: RangeState, { type, value = '', limits = emp
                 ...state,
                 sliderValue: validValue,
                 fieldValue: 
-                    formatNumStr(validValue) +
+                    formatNumericStr(validValue) +
                         ' ' + state.postfix,
                 isFieldActive: false
             }
@@ -77,7 +77,7 @@ export const RangeReducer = (state: RangeState, { type, value = '', limits = emp
                 fieldValue: state.isFieldActive? 
                     validValue.toString()
                         :
-                    formatNumStr(validValue) +
+                    formatNumericStr(validValue) +
                         ' ' + state.postfix,
                 upperLimit: limits.upper,
                 lowerLimit: limits.lower
