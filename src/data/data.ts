@@ -36,11 +36,11 @@ export const formatNumericStr = (numb: string | number) => {
 }
 
 export const getNumberFromNumStr = (str: string) => {
-    return parseInt(clearNumericStr(str))
+    return parseInt(clearNumericStr(str) || '0')
 }
 
 export const clearNumericStr = ((str: string) => {
-    return str.replaceAll(/\D/g, '') || '0'
+    return str.replaceAll(/\D/g, '')
 })
 
 export const getValidValue = (value: number, lower: number, upper: number, step: number) => {

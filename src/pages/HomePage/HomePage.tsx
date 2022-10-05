@@ -10,7 +10,7 @@ const HomePage = () => {
     let [initial, setInitial] = useState(price * inputData.initial.lower)
     let [months, setMonths] = useState(inputData.months.lower)
     let [isLoading, setIsLoading] = useState(false)
-    const monthPay = Math.ceil(
+    const monthPay = Math.round(
         (price - initial) 
             * 
         (
@@ -58,7 +58,7 @@ const HomePage = () => {
                                 disabled={isLoading}
                                 step={100}
                                 getExtraInfo={() => 
-                                    `${Math.ceil(initial / price * 100)}%`
+                                    `${Math.round(initial / price * 100)}%`
                                 }
                             />
                         </div> 
@@ -88,7 +88,7 @@ const HomePage = () => {
                             Сумма договора лизинга
                         </div>
                         <div className='calculator-block__value'>
-                            {`${formatNumericStr(initial + months + monthPay)} ₽`}
+                            {`${formatNumericStr(initial + months * monthPay)} ₽`}
                         </div>
                     </div>
                     <div className='calculator-block'>
